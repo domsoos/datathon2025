@@ -1,0 +1,191 @@
+date,address,lat,lon,itch_index,itch_band,count,species
+2025-10-06,"5250 Cape Henry Ave, Norfolk, VA",36.875,-76.223,9.899397035936625,Extreme (9–10),39.0,Aedes albopictus
+2025-10-07,"9536 7th Bay St, Norfolk, VA",36.931,-76.21,9.897868763636287,Extreme (9–10),27.0,Aedes albopictus
+2025-10-08,"711 Orapax Ave, Norfolk, VA",36.866,-76.309,9.884431901878203,Extreme (9–10),19.0,Aedes albopictus
+2025-10-07,"1130 Leake St, Norfolk, VA",36.83,-76.267,9.782103011626884,Extreme (9–10),15.0,Aedes albopictus
+2025-10-09,"2700 Victoria Ave, Norfolk, VA",36.845,-76.257,9.630403884651594,Extreme (9–10),9.0,Aedes albopictus
+2025-10-06,"8434 Carlton St, Norfolk, VA",36.929,-76.24,9.02079829639024,Extreme (9–10),4.0,Aedes albopictus
+2025-10-09,"5405 Barnhollow Rd, Norfolk, VA",36.85,-76.22,9.014566339205253,Extreme (9–10),3.0,Aedes albopictus
+2025-10-09,"6329 E Virginia Beach Blvd, Norfolk, VA",36.854,-76.187,8.917530916349406,Very High (7–8),55.0,Culex pipiens/restuans
+2025-10-08,"1600 38th St, Norfolk, VA",36.88,-76.313,8.902588754398991,Very High (7–8),19.0,Culex pipiens/restuans
+2025-10-07,"165 Sir Oliver Rd, Norfolk, VA",36.901,-76.275,8.8909674954048,Very High (7–8),3.0,Aedes vexans
+2025-10-01,"1024 47th St, Norfolk, VA",36.887,-76.299,8.849255324127427,Very High (7–8),16.0,Aedes vexans
+2025-10-09,"429 Frizzell Ave, Norfolk, VA",36.848,-76.203,8.769435901416701,Very High (7–8),7.0,Aedes albopictus
+2025-10-07,"927 E Balview Ave, Norfolk, VA",36.946,-76.243,8.716734180177838,Very High (7–8),9.0,Aedes albopictus
+2025-10-07,"7300 Parkdale Dr, Norfolk, VA",36.909,-76.267,8.703070790348017,Very High (7–8),2.0,Aedes vexans
+2025-09-30,"3459 Fletcher Dr, Norfolk, VA",36.891,-76.217,8.688327926090183,Very High (7–8),10.0,Aedes albopictus
+2025-10-09,"8016 Woodall Rd, Norfolk, VA",36.921,-76.197,8.602590491341207,Very High (7–8),5.0,Aedes albopictus
+2025-10-09,"3541 Seay Ave, Norfolk, VA",36.848,-76.239,8.547723745341681,Very High (7–8),1.0,Aedes vexans
+2025-10-02,"135 Bristol Av, Norfolk, VA",36.842,-76.194,8.533487086443515,Very High (7–8),5.0,Aedes vexans
+2025-10-07,"7615 Galveston Blvd, Norfolk, VA",36.915,-76.263,8.485342084929322,Very High (7–8),7.0,Culex pipiens/restuans
+2025-10-01,"4415 Gosnold Ave, Norfolk, VA",36.884,-76.291,8.358937916976586,Very High (7–8),126.0,Culex pipiens/restuans
+2025-10-07,"522 Berkeley Ave Ext, Norfolk, VA",36.83,-76.278,8.150459046719181,Very High (7–8),1.0,Aedes vexans
+2025-10-08,"1501 Armistead Bridge Rd, Norfolk, VA",36.873,-76.307,8.140555437921819,Very High (7–8),3.0,Culex pipiens/restuans
+2025-10-06,"2416 Pershing Ave, Norfolk, VA",36.878,-76.258,8.077524358641973,Very High (7–8),5.0,Aedes albopictus
+2025-10-07,"9507 Inlet Rd, Norfolk, VA",36.934,-76.221,8.044611409483391,Very High (7–8),2.0,Anopheles crucians
+2025-10-07,"1822 Parkview Ave, Norfolk, VA",36.937,-76.226,7.9902042121648496,Very High (7–8),4.0,Aedes albopictus
+2025-09-30,"6231 Bridle Way, Norfolk, VA",36.9,-76.217,7.906781821313269,Very High (7–8),3.0,Aedes vexans
+2025-10-06,"4543 Village Ave, Norfolk, VA",36.862,-76.232,7.704331203227392,Very High (7–8),16.0,Culex pipiens/restuans
+2025-10-07,"404 Decker St, Norfolk, VA",36.835,-76.252,7.672227101929133,Very High (7–8),1.0,Aedes vexans
+2025-10-08,"6347 Devonshire Rd, Norfolk, VA",36.894,-76.246,7.663280862318432,Very High (7–8),2.0,Culex erraticus
+2025-10-09,"3750 Trant Av, Norfolk, VA",36.851,-76.233,7.61008808966062,Very High (7–8),1.0,Anopheles crucians
+2025-10-08,"869 Norview Ave, Norfolk, VA",36.89,-76.253,7.497813946717292,Very High (7–8),9.0,Culex pipiens/restuans
+2025-10-02,"1325 Little Bay Ave, Norfolk, VA",36.966,-76.289,7.428654639849648,Very High (7–8),6.0,Aedes albopictus
+2025-10-08,"300 York St, Norfolk, VA",36.854,-76.294,7.365270253695671,Very High (7–8),8.0,Culex pipiens/restuans
+2025-09-29,"831 Rugby St, Norfolk, VA",36.867,-76.275,7.327214911223422,Very High (7–8),3.0,Aedes vexans
+2025-10-01,"5808 Monroe Pl, Norfolk, VA",36.895,-76.3,7.288628337339761,Very High (7–8),6.0,Culex pipiens/restuans
+2025-10-09,"6333 Wailles Ave, Norfolk, VA",36.859,-76.187,7.079317948796209,Very High (7–8),1.0,Culex pipiens/restuans
+2025-09-23,"530 Timothy Ave, Norfolk, VA",36.92,-76.284,7.067674137447096,Very High (7–8),24.0,Aedes albopictus
+2025-09-22,"8600 Tidewater Dr, Norfolk, VA",36.933,-76.253,7.052715152246723,Very High (7–8),8.0,Aedes albopictus
+2025-10-07,"716 Denison Ave, Norfolk, VA",36.906,-76.255,7.051114559711303,Very High (7–8),2.0,Aedes albopictus
+2025-10-09,"3618 E Virginia Beach Blvd, Norfolk, VA",36.855,-76.239,7.0363273767749845,Very High (7–8),5.0,Culex pipiens/restuans
+2025-10-06,"4630 McNutt Ct, Norfolk, VA",36.879,-76.236,7.01895606504589,Very High (7–8),1.0,Anopheles crucians
+2025-10-02,"388 Dorwin Dr, Norfolk, VA",36.831,-76.196,6.96286074568318,High (5–6),4.0,Aedes albopictus
+2025-09-22,"1750 Campostella Rd, Norfolk, VA",36.824,-76.259,6.9507338228342315,High (5–6),7.0,Aedes albopictus
+2025-09-30,"801 Bainbridge Blvd, Norfolk, VA",36.826,-76.282,6.892876336357776,High (5–6),1.0,Aedes albopictus
+2025-09-30,"1290 Dundale Ave, Norfolk, VA",36.9,-76.239,6.892876336357776,High (5–6),1.0,Aedes albopictus
+2025-10-06,"1363 Sheppard Ave, Norfolk, VA",36.924,-76.235,6.873958460524103,High (5–6),2.0,Aedes albopictus
+2025-10-06,"101 North Shore Rd, Norfolk, VA",36.913,-76.274,6.873958460524103,High (5–6),2.0,Aedes albopictus
+2025-10-02,"5512 Orion Av, Norfolk, VA",36.839,-76.214,6.855766434444582,High (5–6),4.0,Culex pipiens/restuans
+2025-10-01,"5715 Carillo Ave, Norfolk, VA",36.894,-76.308,6.790657952466772,High (5–6),4.0,Aedes albopictus
+2025-09-29,"7900 Tarpon Place, Norfolk, VA",36.917,-76.209,6.698010789234456,High (5–6),23.0,Culex pipiens/restuans
+2025-09-29,"238 E Princess Anne Rd, Norfolk, VA",36.86,-76.283,6.625460762399062,High (5–6),4.0,Culex pipiens/restuans
+2025-10-01,"1170 N Military Hwy, Norfolk, VA",36.863,-76.208,6.565814181556994,High (5–6),1.0,Aedes vexans
+2025-10-08,"743 Muskogee Ave, Norfolk, VA",36.896,-76.257,6.562799517646095,High (5–6),1.0,Culex pipiens/restuans
+2025-09-30,"1401 Selden Ave, Norfolk, VA",36.829,-76.267,6.532709974775174,High (5–6),4.0,Culex pipiens/restuans
+2025-09-30,"1300 Branch Rd, Norfolk, VA",36.905,-76.237,6.532709974775174,High (5–6),4.0,Culex pipiens/restuans
+2025-09-23,"1501 Cloncurry Rd, Norfolk, VA",36.913,-76.314,6.428885659262629,High (5–6),69.0,Culex pipiens/restuans
+2025-10-08,"3526 Norway Place, Norfolk, VA",36.886,-76.268,6.4199325013462865,High (5–6),1.0,Aedes albopictus
+2025-10-07,"313 W Indian River Rd, Norfolk VA",36.836,-76.284,6.413050435822672,High (5–6),1.0,Culex pipiens/restuans
+2025-10-01,"1415 Kempsville Rd, Norfolk, VA",36.871,-76.205,6.409925001060879,High (5–6),2.0,Culex pipiens/restuans
+2025-09-25,"2510 Tait Terrace, Norfolk, VA",36.868,-76.263,6.377753088585882,High (5–6),7.0,Aedes albopictus
+2025-09-30,"1000 Indian River Rd E, Norfolk, VA",36.834,-76.268,6.373610807506935,High (5–6),12.0,Culex pipiens/restuans
+2025-09-25,"2800 Tarrant St, Norfolk, VA",36.864,-76.257,6.2908860416729855,High (5–6),31.0,Culex pipiens/restuans
+2025-10-01,"1310 Child Care Ct, Norfolk, VA",36.866,-76.207,6.23524675956733,High (5–6),1.0,Anopheles crucians
+2025-09-29,"8318 Halprin Dr, Norfolk, VA",36.923,-76.215,6.216692026600528,High (5–6),3.0,Aedes albopictus
+2025-10-06,"8229 Simons Dr, Norfolk, VA",36.924,-76.261,6.1444260824558405,High (5–6),1.0,Aedes albopictus
+2025-09-29,"1770 Kingsway Rd, Norfolk, VA",36.914,-76.225,6.135510413279781,High (5–6),2.0,Culex pipiens/restuans
+2025-10-02,"175 W Bayview Blvd, Norfolk, VA",36.936,-76.269,5.929363438761939,High (5–6),3.0,Anopheles crucians
+2025-09-29,"203 Broadway St, Norfolk, VA",36.876,-76.283,5.883115501208737,High (5–6),2.0,Aedes albopictus
+2025-09-18,"845 38th St., Norfolk, VA",36.88,-76.296,5.751633322611509,High (5–6),10.0,Aedes albopictus
+2025-09-25,"1600 Saint Julian Ave, Norfolk, VA",36.86,-76.258,5.703880856970393,High (5–6),11.0,Culex pipiens/restuans
+2025-10-02,"329 Campostella Rd, Norfolk, VA",36.837,-76.264,5.680308177441564,High (5–6),1.0,Aedes albopictus
+2025-10-01,"1451 River Oaks Dr, Norfolk, VA",36.872,-76.222,5.675441822241247,High (5–6),1.0,Culex pipiens/restuans
+2025-10-02,"422 Government Ave, Norfolk, VA",36.956,-76.263,5.58632864723989,High (5–6),1.0,Aedes vexans
+2025-10-06,"1345 Elk Ave, Norfolk, VA",36.918,-76.236,5.315578563933597,High (5–6),1.0,Culex erraticus
+2025-09-23,"7445 Diven St, Norfolk, VA",36.912,-76.293,5.300721236388084,High (5–6),2.0,Aedes albopictus
+2025-10-02,"144 E Bay Av, Norfolk, VA",36.941,-76.258,5.210410526433192,High (5–6),1.0,Anopheles crucians
+2025-09-17,"1548 Buckingham Ave, Norfolk, VA",36.893,-76.312,5.150647126781234,High (5–6),1.0,Aedes albopictus
+2025-09-25,"2833 Cary Ave, Norfolk, VA",36.858,-76.255,5.058677266795133,High (5–6),3.0,Culex pipiens/restuans
+2025-09-04,"285 La Vallette Ave, Norfolk, VA",36.877,-76.277,4.07063069239401,Moderate (3–4),58.0,Culex pipiens/restuans
+2025-09-23,"8100 Granby St, Norfolk, VA",36.925,-76.268,3.957134044979493,Moderate (3–4),1.0,Anopheles crucians
+2025-08-28,"5523 Pebble La, Norfolk, VA",36.845,-76.213,2.7430469310064787,Moderate (3–4),4.0,Aedes albopictus
+2025-08-27,"5530 Raby Rd, Norfolk, VA",36.858,-76.218,2.4215496161581456,Moderate (3–4),8.0,Culex pipiens/restuans
+2025-08-19,"4000 Robin Hood Rd, Norfolk, VA",36.896,-76.209,2.2786879481434354,Moderate (3–4),23.0,Culex pipiens/restuans
+2025-08-21,"1900 E Indian River Rd, Norfolk, VA",36.832,-76.258,2.219132159813646,Moderate (3–4),3.0,Aedes albopictus
+2025-08-19,"2844 Illinois Ave, Norfolk, VA",36.874,-76.249,2.15545219316282,Moderate (3–4),13.0,Culex pipiens/restuans
+2025-08-11,"329 Kempsville Rd, Norfolk, VA",36.845,-76.191,2.0443621261167966,Moderate (3–4),41.0,Culex pipiens/restuans
+2025-08-07,"7500 Major Ave, Norfolk, VA",36.915,-76.298,1.3232893844901497,Low (0–2),4.0,Culex salinarius
+2025-07-07,"9135 Mace Arch, Norfolk, VA",36.945,-76.264,0.2774168095117908,Low (0–2),7.0,Aedes albopictus
+2025-05-15,"8230 Mona Ave, Norfolk, VA",36.92,-76.212,0.009759112686677524,Low (0–2),2.0,Anopheles punctipennis
+2025-05-14,"3664 Kentucky Ave, Norfolk, VA",36.843,-76.232,0.005747207265248949,Low (0–2),3.0,Culex salinarius
+2025-04-23,"967 Granite Arch, Norfolk, VA",36.882,-76.238,0.0011048987268259347,Low (0–2),1.0,Culex salinarius
+2024-10-25,"1771 Dominion Ave, Norfolk, VA",36.918,-76.226,9.5324861772344e-08,Low (0–2),1.0,Aedes taeniorhynchus
+2024-10-25,"9630 30th Bay St, Norfolk, VA",36.927,-76.182,3.3718833216123456e-08,Low (0–2),1.0,Culex territans
+2024-10-02,"598 Woodis Ave, Norfolk, VA",36.856,-76.301,1.8973660457791327e-08,Low (0–2),2.0,Culex pipiens/restuans
+2024-09-16,"433 Woodview Av, Norfolk, VA",36.927,-76.308,1.620019181538552e-08,Low (0–2),21.0,Aedes albopictus
+2024-09-13,"5822 Sellger Ave, Norfolk, VA",36.839,-76.205,1.1440966207817544e-08,Low (0–2),75.0,Culex pipiens/restuans
+2024-09-27,"948 Dovercourt Rd, Norfolk, VA",36.917,-76.243,1.0593551198436238e-08,Low (0–2),1.0,Aedes albopictus
+2024-09-24,"308 Craig St, Norfolk, VA",36.831,-76.274,7.843383535918736e-09,Low (0–2),1.0,Culiseta melanura
+2024-08-13,"9205 Marlow Ave, Norfolk, VA",36.946,-76.265,2.4812193133024713e-09,Low (0–2),8.0,Aedes albopictus
+2024-07-30,"1350 Bayonne St, Norfolk, VA",36.911,-76.302,5.171503794596366e-10,Low (0–2),10.0,Culex pipiens/restuans
+2024-06-28,"1560 Norview Ave, Norfolk, VA",36.894,-76.224,1.0194645734177288e-10,Low (0–2),22.0,Culex pipiens/restuans
+2024-05-14,"3030 Luxembourg Ave, Norfolk, VA",36.877,-76.27,4.88695474956442e-12,Low (0–2),1.0,Culex territans
+2024-04-09,"334 Peace Haven Dr, Norfolk, VA",36.834,-76.198,1.1173062606007675e-12,Low (0–2),34.0,Culex pipiens/restuans
+2023-11-01,"2727 Wyoming Ave, Norfolk, VA",36.872,-76.248,5.716762496922521e-17,Low (0–2),4.0,Culex pipiens/restuans
+2023-10-13,"351 Emmett Place, Norfolk, VA",36.837,-76.286,3.5982158170448465e-17,Low (0–2),9.0,Culex pipiens/restuans
+2023-10-05,"1923 Arlington Ave, Norfolk, VA",36.836,-76.26,1.4859142772106303e-17,Low (0–2),2.0,Culex salinarius
+2023-09-13,"1000 Tunstall Ave, Norfolk, VA",36.853,-76.277,6.148611596324589e-18,Low (0–2),29.0,Culex pipiens/restuans
+2023-08-02,"5734 Chesapeake Blvd, Norfolk, VA",36.885,-76.245,4.782369731604692e-19,Low (0–2),2.0,Anopheles quadrimaculatus
+2023-07-28,"129 Park Ave, Norfolk, VA",36.843,-76.281,4.1687692000333414e-19,Low (0–2),32.0,Culex pipiens/restuans
+2023-06-22,"1458 Graydon Place, Norfolk, VA",36.873,-76.308,6.562054384948157e-20,Low (0–2),100.0,Culex pipiens/restuans
+2023-07-11,"1512 North Shore Rd, Norfolk, VA",36.913,-76.304,4.86809870548447e-20,Low (0–2),1.0,Culex territans
+2023-06-15,"1550 Armistead Ave, Norfolk, VA",36.863,-76.285,3.5138826338328405e-20,Low (0–2),9.0,Culex salinarius
+2023-06-13,"8230 Mona Ave, Norfolk, VA",36.92,-76.213,1.5171104264645666e-20,Low (0–2),1.0,Culiseta melanura
+2023-05-12,"1152 Kempsville Rd, Norfolk, VA",36.861,-76.199,5.36805902842026e-21,Low (0–2),49.0,Culex pipiens/restuans
+2022-07-07,"9520 20th Bay St, Norfolk, VA",36.926,-76.195,1.3016355181895427e-28,Low (0–2),7.0,Aedes albopictus
+2022-06-10,"1222 Cary Ave, Norfolk, VA",36.883,-76.244,8.763980702098532e-30,Low (0–2),3.0,Culex pipiens/restuans
+2022-05-19,"3633 Village Ave, Norfolk, VA",36.859,-76.241,1.5903078148637213e-30,Low (0–2),1.0,Culex pipiens/restuans
+2021-11-04,"6603 Catherine St, Norfolk, VA",36.903,-76.285,4.833059834728227e-35,Low (0–2),1.0,Aedes vexans
+2021-10-15,"9510 22nd Bay St, Norfolk, VA",36.927,-76.192,1.370534913499304e-35,Low (0–2),9.0,Culex pipiens/restuans
+2020-10-28,"5860 Townley Ave, Norfolk, VA",36.892,-76.212,2.58258820244086e-44,Low (0–2),4.0,Culex salinarius
+2020-10-20,"8400 Tidewater Dr, Norfolk, VA",36.925,-76.252,1.064838605932527e-44,Low (0–2),1.0,Culex pipiens/restuans
+2020-10-07,"3757 Tait Terrace, Norfolk, VA",36.871,-76.243,8.402560331219224e-45,Low (0–2),8.0,Culex pipiens/restuans
+2020-10-01,"3300 Miller Store Rd, Norfolk, VA",36.887,-76.214,3.9533141843968765e-45,Low (0–2),2.0,Aedes albopictus
+2020-06-25,"6020 Finney St, Norfolk, VA",36.848,-76.198,1.9315725507222257e-47,Low (0–2),5.0,Aedes albopictus
+2019-10-24,"3901 Davis St, Norfolk, VA",36.873,-76.24,1.5464742464440375e-53,Low (0–2),7.0,Aedes albopictus
+2019-09-24,"1200 Brambleton Ave, Norfolk, VA",36.85,-76.275,3.196679348925921e-54,Low (0–2),77.0,Culex pipiens/restuans
+2019-10-01,"3753 Henrico St, Norfolk, VA",36.877,-76.243,2.603433344464746e-54,Low (0–2),2.0,Aedes albopictus
+2019-09-18,"1426 W 37th St, Norfolk, VA",36.879,-76.309,2.3949185907978094e-54,Low (0–2),14.0,Aedes albopictus
+2019-09-19,"2100 Tarrallton Dr, Norfolk, VA",36.926,-76.22,1.827585875373721e-54,Low (0–2),5.0,Aedes albopictus
+2019-09-18,"822 40th St, Norfolk, VA",36.881,-76.296,1.7250113619851303e-54,Low (0–2),5.0,Aedes albopictus
+2019-09-18,"2600 26th St, Norfolk, VA",36.878,-76.31,1.434776079018029e-54,Low (0–2),3.0,Aedes albopictus
+2019-08-21,"4201 Powhatan Ave, Norfolk, VA",36.883,-76.316,2.3011822278011108e-55,Low (0–2),6.0,Culex pipiens/restuans
+2019-07-12,"1363 Andes Ct, Norfolk, VA",36.871,-76.212,6.704887877435848e-56,Low (0–2),16.0,Aedes albopictus
+2019-06-12,"4500 Little John Dr, Norfolk, VA",36.878,-76.239,6.918393263999209e-57,Low (0–2),11.0,Culex pipiens/restuans
+2019-06-04,"5392 Roslyn Dr, Norfolk, VA",36.869,-76.216,4.9081571703907806e-57,Low (0–2),3.0,Aedes albopictus
+2019-06-14,"Jamaica Ave/Cary Ave, Norfolk, VA",36.859,-76.262,2.288969011016914e-57,Low (0–2),1.0,Culex salinarius
+2019-05-01,"6441 Tidewater Dr, Norfolk, VA",36.898,-76.258,5.743905232322366e-58,Low (0–2),2.0,Aedes vexans
+2018-10-31,"9633 Worth Ave, Norfolk, VA",36.967,-76.28,1.561657046080175e-62,Low (0–2),2.0,Aedes vexans
+2018-10-10,"9526 Atlans St., Norfolk, VA",36.944,-76.241,9.721626081907826e-63,Low (0–2),25.0,Aedes albopictus
+2018-10-31,"9610 Norfolk Ave, Norfolk, VA",36.948,-76.247,8.198127033533647e-63,Low (0–2),1.0,Culex pipiens/restuans
+2018-10-04,"3656 Herbert St, Norfolk, VA",36.89,-76.234,7.558323932578777e-63,Low (0–2),70.0,Aedes albopictus
+2018-10-10,"5835 Hargrove St, Norfolk, VA",36.844,-76.205,5.887888366856279e-63,Low (0–2),27.0,Culex pipiens/restuans
+2018-10-02,"700 Hydro St, Norfolk, VA",36.844,-76.266,2.691060230576532e-63,Low (0–2),6.0,Culex pipiens/restuans
+2018-09-26,"6619 Azalea Garden Rd, Norfolk, VA",36.905,-76.211,2.1451854925022846e-63,Low (0–2),7.0,Culex erraticus
+2018-09-25,"1540 Wilson Rd, Norfolk, VA",36.857,-76.295,1.6423930257611808e-63,Low (0–2),16.0,Culex pipiens/restuans
+2018-09-11,"7637 North Shore Rd, Norfolk, VA",36.91,-76.313,5.3730072343768647e-64,Low (0–2),2.0,Culiseta melanura
+2018-05-08,"9425 Grove Ave, Norfolk, VA",36.936,-76.228,7.159481083038055e-67,Low (0–2),71.0,Culex pipiens/restuans
+2017-10-27,"465 E Indian River Rd, Norfolk, VA",36.834,-76.275,7.516947277568048e-72,Low (0–2),18.0,Culex pipiens/restuans
+2017-07-14,"7351 Colonial Ave, Norfolk, VA",36.912,-76.276,1.5433381143518552e-74,Low (0–2),3.0,Aedes albopictus
+2016-10-19,"6152 Blackstone St, Norfolk, VA",36.844,-76.192,1.0072913813922918e-80,Low (0–2),340.0,Aedes albopictus
+2016-10-21,"900 Balview Ave, Norfolk, VA",36.946,-76.244,7.781683187755829e-81,Low (0–2),16.0,Aedes albopictus
+2016-11-02,"351 W Freemason St, Norfolk, VA",36.852,-76.296,7.480292560422769e-81,Low (0–2),5.0,Culex pipiens/restuans
+2016-10-14,"3000 Church St, Norfolk, VA",36.875,-76.28,6.722158126474819e-81,Low (0–2),87.0,Aedes albopictus
+2016-10-28,"6311 Tappahannock Dr, Norfolk, VA",36.896,-76.263,5.603887640194639e-81,Low (0–2),5.0,Culex pipiens/restuans
+2016-11-01,"920 South Ave, Norfolk, VA",36.886,-76.248,5.369355626762021e-81,Low (0–2),2.0,Culex pipiens/restuans
+2016-10-18,"2500 Hale St, Norfolk, VA",36.869,-76.275,5.340517181784439e-81,Low (0–2),28.0,Psorophora ferox
+2016-10-28,"7300 Yorktown Dr, Norfolk, VA",36.909,-76.27,5.033734834592514e-81,Low (0–2),1.0,Aedes infirmatus
+2016-10-28,"7100 Sue Lane, Norfolk, VA",36.906,-76.27,4.365136028183212e-81,Low (0–2),8.0,Culex pipiens/restuans
+2016-11-01,"925 Denison Ave, Norfolk, VA",36.908,-76.25,4.228072318461574e-81,Low (0–2),1.0,Culex pipiens/restuans
+2016-11-01,"6380 Sewells Point Rd, Norfolk, VA",36.897,-76.24,3.908420827412639e-81,Low (0–2),3.0,Culex pipiens/restuans
+2016-10-14,"2535 Walmer Ave, Norfolk, VA",36.878,-76.225,3.7443722364390203e-81,Low (0–2),5.0,Aedes vexans
+2016-10-19,"1241 Winburne Lane, Norfolk, VA",36.861,-76.192,3.5645618190982915e-81,Low (0–2),24.0,Culex pipiens/restuans
+2016-10-20,"5309 River Edge Rd, Norfolk, VA",36.851,-76.225,3.5575477822110523e-81,Low (0–2),3.0,Psorophora ferox
+2016-10-28,"1612 Willow Wood Dr, Norfolk, VA",36.889,-76.264,3.355823223061676e-81,Low (0–2),1.0,Culex pipiens/restuans
+2016-10-26,"7600 Halprin Dr, Norfolk, VA",36.912,-76.222,3.070761419363419e-81,Low (0–2),4.0,Culex pipiens/restuans
+2016-10-12,"6432 Tappahannock Dr, Norfolk, VA",36.899,-76.262,3.04151276426696e-81,Low (0–2),3.0,Aedes albopictus
+2016-10-21,"450 Woodford St, Norfolk, VA",36.932,-76.251,2.6497183797545694e-81,Low (0–2),6.0,Culex pipiens/restuans
+2016-10-12,"6435 Newport Ave, Norfolk, VA",36.902,-76.283,2.4038290607464275e-81,Low (0–2),25.0,Culex pipiens/restuans
+2016-10-18,"6101 S Cape Henry Av, Norfolk, VA",36.882,-76.204,2.197290788421178e-81,Low (0–2),1.0,Psorophora ferox
+2016-10-18,"1300 Marshall Ave, Norfolk, VA",36.857,-76.265,1.3134530484487177e-81,Low (0–2),1.0,Psorophora ferox
+2016-10-04,"6119 Azalea Garden Rd, Norfolk, VA",36.898,-76.215,1.2101260911233168e-81,Low (0–2),3.0,Culex erraticus
+2016-09-02,"9540 Selby Pl, Norfolk, VA",36.95,-76.252,1.1159254153230205e-82,Low (0–2),1.0,Culex pipiens/restuans
+2016-08-12,"5740 Adderly St, Norfolk, VA",36.843,-76.207,6.061156197784401e-83,Low (0–2),14.0,Culex pipiens/restuans
+2016-08-11,"6282 Northampton Blvd, Norfolk, VA",36.879,-76.195,5.561543806617673e-83,Low (0–2),1.0,Aedes infirmatus
+2016-08-03,"5209 Bluestone Ave, Norfolk, VA",36.89,-76.306,5.223546568013269e-83,Low (0–2),2.0,Aedes albopictus
+2016-07-29,"2460 Rankin Ct, Norfolk, VA",36.919,-76.213,4.443551086330864e-83,Low (0–2),137.0,Culex pipiens/restuans
+2016-08-19,"1567 Blanford Cir, Norfolk, VA",36.915,-76.317,2.9318148402873164e-83,Low (0–2),1.0,Culiseta melanura
+2016-07-29,"1370 Crane Cres, Norfolk, VA",36.92,-76.235,1.9713225026832246e-83,Low (0–2),1.0,Culex salinarius
+2016-07-14,"800 E 25th St, Norfolk, VA",36.87,-76.277,1.69641458284699e-83,Low (0–2),77.0,Culex pipiens/restuans
+2016-07-26,"1000 berkley Ave ex, Norfolk, VA",36.828,-76.274,1.6576780258153047e-83,Low (0–2),1.0,Culex salinarius
+2016-07-20,"6040 Waterworks Rd, Norfolk, VA",36.873,-76.201,1.4050495104150446e-83,Low (0–2),9.0,Culex pipiens/restuans
+2015-05-27,"6969 Tidewater Dr, Norfolk, VA",36.902,-76.258,2.865928177216833e-94,Low (0–2),1.0,Aedes albopictus
+2014-11-06,"1400 Norview Ave, Norfolk, VA",36.891,-76.232,4.001227169341287e-99,Low (0–2),14.0,Culex pipiens/restuans
+2025-08-28,"2409 Bowdens Ferry Rd, Norfolk, VA",36.876,-76.305,0.0,Low (0–2),6.0,Males
+2025-08-11,"1000 Villa Circle, Norfolk, VA",36.872,-76.274,0.0,Low (0–2),26.0,Males
+2025-07-28,"1700 Pope Ave, Norfolk, VA",36.875,-76.268,0.0,Low (0–2),1.0,Males
+2025-06-16,"8456 Cape View Av, Norfolk, VA",36.93,-76.228,0.0,Low (0–2),9.0,Males
+2024-10-31,"1300 Carr St, Norfolk, VA",36.847,-76.274,0.0,Low (0–2),2.0,Males
+2024-10-02,"600 Mowbray Arch, Norfolk, VA",36.858,-76.293,0.0,Low (0–2),3.0,Males
+2025-04-29,"9439 First View St., Norfolk, VA",36.951,-76.259,0.0,Low (0–2),2.0,Males
