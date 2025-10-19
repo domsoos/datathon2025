@@ -26,31 +26,32 @@ pip install pandas numpy matplotlib folium
 
 Per trap reading, we compute a biologically plausible base risk and then map it to the familiar 0–10 UV-style scale.
 
-Abundance (saturating):
+### Abundance (saturating):
 abundance = sqrt(count) / (sqrt(count) + K_traptype)
 with K_traptype = p70(sqrt(count)) within each trap type (BG, Gravid, CDC).
 This fairly compares different trap methods and reflects diminishing returns.
 
-Species weight (who bites humans?)
+### Species weight (who bites humans?)
 species_weight ∈ [0, 0.95]
 Aedes albopictus ≈ 0.95; Aedes spp. 0.9; Anopheles 0.7; Culex 0.6; Males = 0.
 
-Recency (fresh catches matter most):
+### Recency (fresh catches matter most):
 recency = 0.5 ** (days_since / 12) (12-day half-life).
 
-Habitat nudge (wetland suitability):
+### Habitat nudge (wetland suitability):
 NWI wetlands → gentle multiplier habitat_multiplier ∈ [0.95, 1.15].
 
-Base:
+### Base:
 base = abundance * species_weight * recency * habitat_multiplier.
 
-Calibration to 0–10 (stable & readable):
+### Calibration to 0–10 (stable & readable):
 Recent (last 60 days, excluding “Males”) piecewise quantile mapping:
 q10 → 2, q50 → 5, q90 → 8.5, q99 → 10 (linear between anchors).
 
 This anchors the index to local conditions, avoiding “everything is 0 or everything is 10”.
 
 </details>
+
 ## Run the pipeline
 ```bash
 python3 src/itch_index.py \
@@ -60,15 +61,12 @@ python3 src/itch_index.py \
 ```
 ## Outputs
 
-outputs/itch_index_by_trap.csv — per trap reading (with components)
 
-outputs/itch_index_latest_by_location.csv — latest score per site
-
-outputs/itch_index_scatter.png — latest map scatter (static)
-
-outputs/itch_index_bar_top_sites.png — top latest sites
-
-outputs/itch_index_heatgrid.csv — coarse IDW grid for choropleths
+- ```outputs/itch_index_by_trap.csv``` — per trap reading (with components)
+- ```outputs/itch_index_latest_by_location.csv``` — latest score per site
+- ```outputs/itch_index_scatter.png``` — latest map scatter (static)
+- ```outputs/itch_index_bar_top_sites.png``` — top latest sites
+- ```outputs/itch_index_heatgrid.csv``` — coarse IDW grid for choropleths
 
 
 ## Build the visuals
@@ -81,32 +79,24 @@ python3 src/make_itch_story.py \
 
 ## Story outputs
 
-fig_hist_latest.png — distribution across UV-style bands
-
-fig_trend_rolling.png — 14-day mean / 95th / max
-
-fig_species_contrib.png — top species (bite-weighted, recent 30 days)
-
-fig_hotspot_stability.png — latest vs last-4-weeks at same sites
-
-fig_traptype_box.png — sanity check by trap type
-
-itch_map_banded.html — interactive map with discrete band colors
+- ```fig_hist_latest.png``` — distribution across UV-style bands
+- ```fig_trend_rolling.png``` — 14-day mean / 95th / max
+- ```fig_species_contrib.png``` — top species (bite-weighted, recent 30 days)
+- ```fig_hotspot_stability.png``` — latest vs last-4-weeks at same sites
+- ```fig_traptype_box.png``` — sanity check by trap type
+- ```itch_map_banded.html``` — interactive map with discrete band colors
 
 <table> <tr> <td width="50%"> <img src="outputs_story/fig_trend_rolling.png" alt="14-day trend"> </td> <td width="50%"> <img src="outputs_story/fig_species_contrib.png" alt="Top species"> </td> </tr> </table>
-Interpreting the Itch Index
 
-0–2 Low – low nuisance risk
+# Interpreting the Itch Index
 
-3–4 Moderate – repellent recommended for dusk/dawn
+- 0–2 Low – low nuisance risk
+- 3–4 Moderate – repellent recommended for dusk/dawn
+- 5–6 High – repellent + socks/long sleeves near vegetation
+- 7–8 Very High – avoid marsh-edge trails at dusk; event caution
+- 9–10 Extreme – strong protection; consider advisories
 
-5–6 High – repellent + socks/long sleeves near vegetation
-
-7–8 Very High – avoid marsh-edge trails at dusk; event caution
-
-9–10 Extreme – strong protection; consider advisories
-
-### Design choices (why this holds up)
+### Design choices
 
 Saturating abundance matches how human nuisance rises then levels off
 
