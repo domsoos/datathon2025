@@ -22,35 +22,36 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install pandas numpy matplotlib folium
 ```
 
-<details> <summary><strong>How the Itch Index (0–10) is calculated</strong> — science in short (click to expand)</summary>
+<details>
+<summary><strong>How the Itch Index (0–10) is calculated</strong> — science in short (click to expand)</summary>
 
-Per trap reading, we compute a biologically plausible base risk and then map it to the familiar 0–10 UV-style scale.
+Per trap reading, we compute a biologically plausible **base risk** and then map it to the familiar **0–10** UV-style scale.
 
-### Abundance (saturating):
-abundance = sqrt(count) / (sqrt(count) + K_traptype)
-with K_traptype = p70(sqrt(count)) within each trap type (BG, Gravid, CDC).
-This fairly compares different trap methods and reflects diminishing returns.
+- **Abundance (saturating)**  
+  `abundance = sqrt(count) / (sqrt(count) + K_trap)`  
+  where `K_trap = p70(sqrt(count))` *within the same trap type* (BG, Gravid, CDC).  
+  This fairly compares different trap methods and reflects diminishing returns.
 
-### Species weight (who bites humans?)
-species_weight ∈ [0, 0.95]
-Aedes albopictus ≈ 0.95; Aedes spp. 0.9; Anopheles 0.7; Culex 0.6; Males = 0.
+- **Species weight (who bites humans?)**  
+  `species_weight ∈ [0, 0.95]`  
+  Examples: *Aedes albopictus* ≈ `0.95`; *Aedes* spp. `0.9`; *Anopheles* `0.7`; *Culex* `0.6`; **Males = `0`**.
 
-### Recency (fresh catches matter most):
-recency = 0.5 ** (days_since / 12) (12-day half-life).
+- **Recency (fresh catches matter most)**  
+  `recency = 0.5 ** (days_since / 12)`  (12-day half-life)
 
-### Habitat nudge (wetland suitability):
-NWI wetlands → gentle multiplier habitat_multiplier ∈ [0.95, 1.15].
+- **Habitat nudge (wetland suitability)**  
+  Region-wide multiplier from NWI wetlands:  
+  `habitat_multiplier ∈ [0.95, 1.15]`
 
-### Base:
-base = abundance * species_weight * recency * habitat_multiplier.
+- **Base risk**  
+  `base = abundance * species_weight * recency * habitat_multiplier`
 
-### Calibration to 0–10 (stable & readable):
-Recent (last 60 days, excluding “Males”) piecewise quantile mapping:
-q10 → 2, q50 → 5, q90 → 8.5, q99 → 10 (linear between anchors).
-
-This anchors the index to local conditions, avoiding “everything is 0 or everything is 10”.
+- **Calibration to 0–10 (stable & readable)**  
+  Piecewise quantile mapping over the last **60 days** (excluding “Males”):  
+  `q10 → 2`, `q50 → 5`, `q90 → 8.5`, `q99 → 10` (linear between anchors).
 
 </details>
+
 
 ## Run the pipeline
 ```bash
@@ -86,17 +87,17 @@ python3 src/make_itch_story.py \
 - ```fig_traptype_box.png``` — sanity check by trap type
 - ```itch_map_banded.html``` — interactive map with discrete band colors
 
-<table> <tr> <td width="50%"> <img src="outputs_story/fig_trend_rolling.png" alt="14-day trend"> </td> <td width="50%"> <img src="outputs_story/fig_species_contrib.png" alt="Top species"> </td> </tr> </table>
+<table> <tr> <td width="50%"> <img src="data/story/fig_species_contrib.png" alt="Top species"> </td> <td width="50%"> <img src="data/story/fig_hotspot_stability.png" alt="Hotspot Stability"> </td> </tr> </table>
 
 # Interpreting the Itch Index
 
-- 0–2 Low – low nuisance risk
-- 3–4 Moderate – repellent recommended for dusk/dawn
-- 5–6 High – repellent + socks/long sleeves near vegetation
-- 7–8 Very High – avoid marsh-edge trails at dusk; event caution
-- 9–10 Extreme – strong protection; consider advisories
+- ```0–2 Low``` – low nuisance risk
+- ```3–4 Moderate``` – repellent recommended for dusk/dawn
+- ```5–6 High``` – repellent + socks/long sleeves near vegetation
+- ```7–8 Very High``` – avoid marsh-edge trails at dusk; event caution
+- ```9–10 Extreme``` – strong protection; consider advisories
 
-### Design choices
+## Design choices
 
 Saturating abundance matches how human nuisance rises then levels off
 
