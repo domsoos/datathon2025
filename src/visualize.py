@@ -148,6 +148,41 @@ def main(latest_csv, bytrap_csv, outdir):
         plt.savefig(os.path.join(outdir,"fig_traptype_box.png"), dpi=150)
         plt.close()
 
+    # Park-level Itch Index overlay
+    try: 
+        import geopandas as gpd
+        from shapely.geometry import Point
+        
+        print("Calculating park-level Itch Index...")
+        
+        # Load parks
+        parks_path = os.path.join("data", "Parks_-_City_of_Norfolk.geojson")
+        parks = gpd.read_file(parks_path)
+        parks = parks.to_crs(epsg=4326) # ensure WGS84 lat/lon, we want park data and mosquito data to use the same coordinate system
+        
+        # Load trap locations
+        traps = latest.dropna(subset=["lat", "lon", "itch_index"]).copy()
+        traps_gdf = gpd.GeoDataFrame(
+            traps,
+            geometry=gpd.points_from_xy(traps["lon"], traps["lat"]),
+            crs="EPSG:4326"
+        )
+        
+        # Spatial join - Assign each trap to a park polygon (if inside)
+        joined = gpd.sjoin(traps_gdf, parks, how="inner", predicate="within")
+        
+        # Aggregate by park
+        park_scores = joined.groupby(parks.index.names or parks.index)["itch_index"].mean()
+        parks["itch_mean"] = parks.index.map(park_scores)
+        
+        # Save to new GeoJSON
+        parks_out = os.path.join("data", "parks_itch_index.geojson")
+        parks.to_file(parks_out, driver="GeoJSON")
+        print(f"Saved park-level scores to {parks_out}")
+    
+    except Exception as e:
+        print("Park overlay skipped:", e)
+        
     # 6) Interactive map with banded colors (discrete)
     try:
         import folium
