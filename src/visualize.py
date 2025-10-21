@@ -264,8 +264,6 @@ def main(latest_csv, bytrap_csv, outdir):
         from folium import features
 
         def band_color(v):
-            if v is None or (isinstance(v, float) and np.isnan(v)):
-                return "#888888"
             v = float(np.clip(v, 0, 10))
             if v < 2:  return "#6BBE45"  # Low
             if v < 5:  return "#FFD23F"  # Moderate
@@ -297,7 +295,7 @@ def main(latest_csv, bytrap_csv, outdir):
         traps_fg.add_to(m)
 
         # -- Parks layer (solid color + black outline)
-        parks_fg = folium.FeatureGroup(name="Parks (nearest-3 avg)", show=False)
+        parks_fg = folium.FeatureGroup(name="Parks (nearest-5 avg)", show=False)
         parks_geo = os.path.join("data", "parks_itch_index.geojson")
         if os.path.exists(parks_geo):
             import json
@@ -309,14 +307,11 @@ def main(latest_csv, bytrap_csv, outdir):
                 v = props.get("itch_mean", None)
                 # color fill by band, outline in black
                 fill = band_color(v)
-                if v is None or (isinstance(v, float) and np.isnan(v)):
-                    return {"color": "#000000", "weight": 1.0, "fillColor": "#CCCCCC", "fillOpacity": 0.5}
-                else:
-                    return {"color": "#000000", "weight": 1.25, "fillColor": fill, "fillOpacity": 0.75}
+                return {"color": "#000000", "weight": 1.25, "fillColor": fill, "fillOpacity": 0.75}
 
             def park_popup(feature):
                 p = feature.get("properties", {})
-                name = p.get("PARK_NAME") or p.get("park_name") or p.get("NAME") or "Unnamed park"
+                name = p.get("PARK_NAME")
                 mean = p.get("itch_mean")
                 n = p.get("itch_n", 0)
                 traplist = p.get("itch_trap_ids", "")
@@ -325,7 +320,7 @@ def main(latest_csv, bytrap_csv, outdir):
 
             folium.GeoJson(
                 parks_data,
-                name="Parks (nearest-3 avg)",
+                name="Parks (nearest-5 avg)",
                 style_function=park_style,
                 tooltip=folium.GeoJsonTooltip(
                     fields=["PARK_NAME","itch_mean","itch_n"],
