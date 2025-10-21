@@ -172,7 +172,7 @@ def main(latest_csv, bytrap_csv, outdir):
         joined = gpd.sjoin(traps_gdf, parks, how="inner", predicate="within")
         
         # Aggregate by park
-        park_scores = joined.groupby(parks.index.names or parks.index)["itch_index"].mean()
+        park_scores = joined.groupby(joined.index)["itch_index"].mean()
         parks["itch_mean"] = parks.index.map(park_scores)
         
         # Save to new GeoJSON
@@ -215,6 +215,41 @@ def main(latest_csv, bytrap_csv, outdir):
                 tooltip=f"{val:.1f} – {itch_band(val)}"
             ).add_to(g)
         g.add_to(m)
+        
+        # Add park polygons colored by their mean itch index
+        try: 
+            parks_geo = os.path.join("data", "parks_itch_index.geojson")
+            if os.path.exists(parks_geo):
+                import json
+                with open(parks_geo, "r", encoding="utf-8") as f:
+                    parks_data = json.load(f)
+                
+                def park_style(feature):
+                    v = feature["properties"].get("itch_mean", None)
+                    if v is None or np.isnan(v):
+                        # dark gray for missing data
+                        return {"color": "#555555", "weight": 1, "fillColor": "#888888", "fillOpacity": 0.3}
+                    else:
+                        c = band_color(v)
+                        return {"color": c, "weight": 1.5, "fillColor": c, "fillOpacity": 0.55}
+                
+                folium.GeoJson(
+                    parks_data,
+                    name="Park Itch Index",
+                    style_function=park_style,
+                    tooltip=folium.GeoJsonTooltip(
+                        fields=["PARK_NAME", "itch_mean"],
+                        aliases=["Park:", "Mean Itch Index"],
+                        localize=True,
+                        labels=True,
+                        sticky=False
+                    )
+                ).add_to(m)
+            else:
+                print(f"No park GeoJSON found at {parks_geo}")
+        except Exception as e:
+            print(f"Failed to overlay parks: ", e)
+        
         folium.LayerControl(collapsed=False).add_to(m)
 
         # Legend
