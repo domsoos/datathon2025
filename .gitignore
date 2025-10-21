@@ -1,1 +1,27 @@
+# OS
 .DS_Store
+__pycache__/
+*.pyc
+
+# Local virtual environment
+.venv/
+env/
+venv/
+
+# Generated data & plots
+data/story/
+src/outputs/
+src/outputs_story/
+data/itch_index_*.csv
+data/itch_index_*.png
+data/itch_index_*.html
+src/outputs/*.csv
+src/outputs/*.png
+src/outputs_story/*.html
+
+# Maps and figures
+itch_map*.html
+*.png
+
+# Temporary / logs
+*.log
