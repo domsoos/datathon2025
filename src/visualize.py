@@ -246,7 +246,7 @@ def main(latest_csv, bytrap_csv, outdir):
         plt.figure(figsize=(7,5))
         data = [g["itch_index"].clip(0,10).values for _, g in latest_by_site.groupby("trap_type")]
         labels = [str(k) for k, _ in latest_by_site.groupby("trap_type")]
-        plt.boxplot(data, labels=labels, vert=True, showfliers=False)
+        plt.boxplot(data, tick_labels=labels, vert=True, showfliers=False)
         plt.ylabel("Itch Index (0–10)")
         plt.title("Itch Index by trap type (latest per site)")
         plt.tight_layout()
@@ -493,13 +493,20 @@ def main(latest_csv, bytrap_csv, outdir):
                 traplist = p.get("itch_trap_ids", "")
                 # show a friendly placeholder if empty
                 traplist_display = traplist if traplist else "—"
+
+                # precautions in park popup
+                band_lbl = _band_short(mean)
+                recs_html = render_recs_html(band_lbl)
+
                 popup_html_block = (
-                    f"<b>Park name:</b> {name}<br>"
-                    f"<b>Itch index:</b> {mean_str}<br>"
-                    f"<b># Contributing traps:</b> {n}<br>"
-                    f"<b>Contributing traps:</b> {traplist_display}"
+                    f"<div style='min-width:260px'>"
+                    f"<div style='font-weight:700;margin-bottom:4px;'>{html.escape(str(name))}</div>"
+                    f"<div><b>Itch index:</b> {html.escape(mean_str)} ({band_lbl})</div>"
+                    f"<div><b># Contributing traps:</b> {html.escape(str(n))}</div>"
+                    f"<div><b>Contributing traps:</b> {html.escape(traplist_display)}</div>"
+                    f"<div style='margin-top:6px;'><b>Recommended precautions ({band_lbl}):</b>{recs_html}</div>"
+                    f"</div>"
                 )
-                # attach as a property for GeoJsonPopup to reference
                 p["popup_html"] = popup_html_block
 
             folium.GeoJson(
@@ -541,7 +548,7 @@ def main(latest_csv, bytrap_csv, outdir):
         </div>
         """
         m.get_root().html.add_child(folium.Element(hint))
-        
+
         out_html = os.path.join(outdir, "itch_map_banded.html")
         m.save(out_html)
         print(f"Saved {out_html}")
