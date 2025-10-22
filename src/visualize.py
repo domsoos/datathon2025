@@ -482,14 +482,14 @@ def main(latest_csv, bytrap_csv, outdir):
                 traplist = p.get("itch_trap_ids", "")
                 # show a friendly placeholder if empty
                 traplist_display = traplist if traplist else "—"
-                html = (
+                popup_html_block = (
                     f"<b>Park name:</b> {name}<br>"
                     f"<b>Itch index:</b> {mean_str}<br>"
                     f"<b># Contributing traps:</b> {n}<br>"
                     f"<b>Contributing traps:</b> {traplist_display}"
                 )
                 # attach as a property for GeoJsonPopup to reference
-                p["popup_html"] = html
+                p["popup_html"] = popup_html_block
 
             folium.GeoJson(
                 parks_data,
