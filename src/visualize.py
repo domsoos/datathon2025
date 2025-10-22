@@ -468,7 +468,7 @@ def main(latest_csv, bytrap_csv, outdir):
             )
 
         traps_fg.add_to(m)
-        
+
         # -- Parks layer (solid color + black outline), with popups showing park name, mean, n, and contributing trap numbers
         parks_fg = folium.FeatureGroup(name="Parks (nearest-5 avg)", show=False)
         parks_geo = os.path.join("data", "parks_itch_index.geojson")
@@ -534,6 +534,14 @@ def main(latest_csv, bytrap_csv, outdir):
         """
         m.get_root().html.add_child(folium.Element(legend))
 
+        # Small hint about chips
+        hint = """
+        <div style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: white; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 12px;">
+          Tip: Click species chips in popups to highlight matching traps. Click again to clear.
+        </div>
+        """
+        m.get_root().html.add_child(folium.Element(hint))
+        
         out_html = os.path.join(outdir, "itch_map_banded.html")
         m.save(out_html)
         print(f"Saved {out_html}")
