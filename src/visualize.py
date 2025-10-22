@@ -19,6 +19,8 @@ Outputs (PNG/HTML) go to --outdir:
 import argparse
 import os
 import json
+import re
+import html
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -36,6 +38,60 @@ def itch_band(v: float) -> str:
 
 def band_edges(): return [0,2,5,7,9,10]
 def band_labels(): return ["Low","Moderate","High","Very High","Extreme"]
+
+def _band_short(v: float) -> str:
+    """Get just 'Low'/'Moderate'/...(derived from itch_band)."""
+    b = itch_band(v)
+    # take first token ('Low', 'Moderate', etc.); handle 'No data'
+    return b.split()[0] if b and b != "No data" else "No data"
+
+def recs_for_band(band: str) -> list[str]:
+    band = (band or "").strip()
+    if band == "Low":
+        return ["Use repellent if outdoors at dusk/dawn.", "Tip & toss standing water weekly."]
+    if band == "Moderate":
+        return ["Apply EPA-registered repellent.", "Wear long sleeves/pants at dusk/dawn.", "Dump standing water."]
+    if band == "High":
+        return ["Use repellent (reapply as directed).", "Limit time outdoors at peak hours.",
+                "Run fans outside.", "Fix window/door screens."]
+    if band == "Very High":
+        return ["Strongly use repellent & cover up.", "Avoid dusk/dawn gatherings if possible.",
+                "Eliminate standing water now.", "Consider spatial repellents."]
+    if band == "Extreme":
+        return ["Avoid peak biting hours if possible.", "Repellent + protective clothing every outing.",
+                "Aggressively remove/treat standing water.", "Use fans; stay near screened areas."]
+    return ["No specific guidance."]
+
+def render_recs_html(band_label: str) -> str:
+    items = recs_for_band(band_label)
+    lis = "".join(f"<li>{html.escape(x)}</li>" for x in items)
+    return f"<ul style='margin:4px 0 0 16px;padding-left:14px;'>{lis}</ul>"
+
+def _split_species_list(species_field: str) -> list[str]:
+    if not isinstance(species_field, str) or not species_field.strip():
+        return []
+    parts = re.split(r"[;,]", species_field)
+    return [p.strip() for p in parts if p.strip()]
+
+def render_species_chips(species_field: str) -> str:
+    """
+    Render species as clickable 'chips' that call a JS filter (no external links).
+    """
+    parts = _split_species_list(species_field)
+    if not parts:
+        return "—"
+    chips = []
+    for p in parts:
+        label = html.escape(p)
+        chips.append(
+            f"<span role='button' tabindex='0' "
+            f"onclick=\"window.itchFilterSpecies({json.dumps(p)})\" "
+            f"onkeydown=\"if(event.key==='Enter')window.itchFilterSpecies({json.dumps(p)})\" "
+            f"style='display:inline-block;padding:2px 6px;border-radius:10px;"
+            f"border:1px solid #ddd;margin:1px;cursor:pointer;'>"
+            f"{label}</span>"
+        )
+    return " ".join(chips)
 
 def safe_read(p):
     if not os.path.exists(p):
@@ -442,3 +498,7 @@ if __name__ == "__main__":
     ap.add_argument("--outdir", default="outputs_story", help="where to save visuals")
     args = ap.parse_args()
     main(args.latest, args.bytrap, args.outdir)
+
+
+#--------------------------
+#
