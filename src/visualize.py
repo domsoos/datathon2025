@@ -20,6 +20,7 @@ import argparse, os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 def itch_band(v: float) -> str:
     if v < 2:  return "Low (0–2)"
@@ -75,6 +76,45 @@ def main(latest_csv, bytrap_csv, outdir):
     plt.legend()
     plt.tight_layout()
     plt.savefig(os.path.join(outdir,"fig_trend_rolling.png"), dpi=150)
+    plt.close()
+    # 2b) Recent trend (last 30 days, 7-day rolling, time-based)
+    df_recent = df.dropna(subset=["date"]).copy()
+    df_recent["day"] = df_recent["date"].dt.floor("D")
+    last_day = df_recent["day"].max()
+    lookback_days = 30
+    start_day = last_day - pd.Timedelta(days=lookback_days)
+
+    df_recent = df_recent[df_recent["day"] >= start_day]
+
+    daily_recent = (df_recent
+        .groupby("day")["itch_index"]
+        .agg(mean="mean", p95=lambda s: s.quantile(0.95), max="max")
+        .sort_index())
+
+    full_range = pd.date_range(start=start_day, end=last_day, freq="D")
+    daily_recent = daily_recent.reindex(full_range)
+
+    roll7 = daily_recent.rolling("7D", min_periods=2).mean()
+
+    plt.figure(figsize=(8,4))
+    plt.plot(roll7.index, roll7["mean"], label="Mean (7-day)")
+    plt.plot(roll7.index, roll7["p95"],  label="95th (7-day)")
+    plt.plot(roll7.index, roll7["max"],  label="Max (7-day)")
+    ax = plt.gca()
+    # Show ticks every 3 days, readable short format (e.g., "Sep 10")
+    ax.xaxis.set_major_locator(mdates.DayLocator(interval=3))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
+    # tweaks for readability
+    for label in ax.get_xticklabels():
+        label.set_rotation(30)
+        label.set_horizontalalignment("right")
+    ax.margins(x=0.01)
+    ax.grid(True, alpha=0.3)
+    plt.ylabel("Itch Index (0–10)")
+    plt.title("Hampton Roads Itch Index — Recent Trend (last 30 days, 7-day rolling)")
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(os.path.join(outdir, "fig_trend_recent_7day.png"), dpi=150)
     plt.close()
 
     # 3) Species contribution
