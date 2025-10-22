@@ -19,7 +19,6 @@ Outputs (PNG/HTML) go to --outdir:
 import argparse
 import os
 import json
-import re
 import html
 import numpy as np
 import pandas as pd
@@ -53,18 +52,18 @@ def _band_short(v: float) -> str:
 def recs_for_band(band: str) -> list[str]:
     band = (band or "").strip()
     if band == "Low":
-        return ["Use repellent if outdoors at dusk/dawn.", "Tip & toss standing water weekly."]
+        return ["Use repellent if outdoors at dusk/dawn."]
     if band == "Moderate":
-        return ["Apply EPA-registered repellent.", "Wear long sleeves/pants at dusk/dawn.", "Dump standing water."]
+        return ["Apply EPA-registered repellent.", "Wear long sleeves/pants at dusk/dawn."]
     if band == "High":
         return ["Use repellent (reapply as directed).", "Limit time outdoors at peak hours.",
-                "Run fans outside.", "Fix window/door screens."]
+                "Run fans outside."]
     if band == "Very High":
         return ["Strongly use repellent & cover up.", "Avoid dusk/dawn gatherings if possible.",
-                "Eliminate standing water now.", "Consider spatial repellents."]
+                "Avoid standing water.", "Consider spatial repellents."]
     if band == "Extreme":
         return ["Avoid peak biting hours if possible.", "Repellent + protective clothing every outing.",
-                "Aggressively remove/treat standing water.", "Use fans; stay near screened areas."]
+                "Steer clear of all standing water.", "Use fans; stay near screened areas."]
     return ["No specific guidance."]
 
 def render_recs_html(band_label: str) -> str:
@@ -72,31 +71,6 @@ def render_recs_html(band_label: str) -> str:
     lis = "".join(f"<li>{html.escape(x)}</li>" for x in items)
     return f"<ul style='margin:4px 0 0 16px;padding-left:14px;'>{lis}</ul>"
 
-def _split_species_list(species_field: str) -> list[str]:
-    if not isinstance(species_field, str) or not species_field.strip():
-        return []
-    parts = re.split(r"[;,]", species_field)
-    return [p.strip() for p in parts if p.strip()]
-
-def render_species_chips(species_field: str) -> str:
-    """
-    Render species as clickable 'chips' that call a JS filter (no external links).
-    """
-    parts = _split_species_list(species_field)
-    if not parts:
-        return "—"
-    chips = []
-    for p in parts:
-        label = html.escape(p)
-        chips.append(
-            f"<span role='button' tabindex='0' "
-            f"onclick=\"window.itchFilterSpecies({json.dumps(p)})\" "
-            f"onkeydown=\"if(event.key==='Enter')window.itchFilterSpecies({json.dumps(p)})\" "
-            f"style='display:inline-block;padding:2px 6px;border-radius:10px;"
-            f"border:1px solid #ddd;margin:1px;cursor:pointer;'>"
-            f"{label}</span>"
-        )
-    return " ".join(chips)
 
 def safe_read(p):
     if not os.path.exists(p):
@@ -389,53 +363,18 @@ def main(latest_csv, bytrap_csv, outdir):
         mcenter = [latest["lat"].mean(), latest["lon"].mean()]
         m = folium.Map(location=mcenter, zoom_start=11, tiles="cartodbpositron")
 
-        # inject small JS to enable species-based highlighting
-        _filter_js = """
-        <script>
-        window.itchFilterActive = null;
-        window.itchAllTrapLayers = [];
-
-        window.itchRegisterTrap = function(layer, speciesText) {
-          try {
-            layer._itchSpecies = (speciesText || '').toLowerCase();
-            window.itchAllTrapLayers.push(layer);
-          } catch (e) {}
-        };
-
-        window.itchFilterSpecies = function(species) {
-          const key = String(species || '').toLowerCase().trim();
-          if (!key) return;
-          // toggle off if same chip clicked
-          if (window.itchFilterActive === key) {
-            window.itchFilterActive = null;
-            window.itchAllTrapLayers.forEach(l => {
-              try { l.setStyle({opacity:1, fillOpacity:0.85}); } catch(e) {}
-            });
-            return;
-          }
-          window.itchFilterActive = key;
-          window.itchAllTrapLayers.forEach(l => {
-            const hit = (l._itchSpecies || '').includes(key);
-            try {
-              l.setStyle({opacity: hit ? 1 : 0.15, fillOpacity: hit ? 0.85 : 0.06});
-              if (hit && l.bringToFront) l.bringToFront();
-            } catch(e) {}
-          });
-        };
-        </script>
-        """
-        m.get_root().html.add_child(folium.Element(_filter_js))
 
         # -- Traps layer (points)
         traps_fg = folium.FeatureGroup(name="Traps (points)", show=True)
         for _, r in latest.iterrows():
             val = r["itch_index"]
             val_clipped = float(np.clip(val, 0, 10)) if not pd.isna(val) else None
+            val_str = f"{val_clipped:.1f}" if val_clipped is not None else "--"
             c = band_color(val_clipped)
 
-            # popup with species chips + precautions
+            # popup with precautions
             band_lbl = _band_short(val_clipped)
-            species_html = render_species_chips(r.get("species","") or "")
+            species_html = html.escape(r.get("species", "") or "--")
             date_str = ""
             if isinstance(r.get("date", None), pd.Timestamp):
                 date_str = r["date"].strftime("%Y-%m-%d")
@@ -444,7 +383,7 @@ def main(latest_csv, bytrap_csv, outdir):
             popup_html = (
                 f"<div style='min-width:260px'>"
                 f"<div style='font-weight:700;margin-bottom:4px;'>Trap {r['trap_num']}</div>"
-                f"<div><b>Itch:</b> {val_clipped:.1f} ({itch_band(val)})</div>"
+                f"<div><b>Itch:</b> {val_str} ({itch_band(val)})</div>"
                 f"<div><b>Address:</b> {html.escape(str(r.get('address','') or '—'))}</div>"
                 f"<div><b>Species:</b> {species_html}</div>"
                 f"<div><b>Date:</b> {html.escape(date_str or '—')}</div>"
@@ -464,13 +403,6 @@ def main(latest_csv, bytrap_csv, outdir):
             )
             marker.add_to(traps_fg)
 
-        # -- Register marker/species for client-side filtering
-            _species_for_js = ",".join(_split_species_list(str(r.get("species","")))).lower()
-            m.get_root().html.add_child(
-                folium.Element(
-                    f"<script>window.itchRegisterTrap({marker.get_name()}, {json.dumps(_species_for_js)});</script>"
-                )
-            )
 
         traps_fg.add_to(m)
 
@@ -545,14 +477,6 @@ def main(latest_csv, bytrap_csv, outdir):
         </div>
         """
         m.get_root().html.add_child(folium.Element(legend))
-
-        # Small hint about chips
-        hint = """
-        <div style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: white; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 12px;">
-          Tip: Click species chips in popups to highlight matching traps. Click again to clear.
-        </div>
-        """
-        m.get_root().html.add_child(folium.Element(hint))
 
         out_html = os.path.join(outdir, "itch_map_banded.html")
         m.save(out_html)
