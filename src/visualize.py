@@ -448,16 +448,27 @@ def main(latest_csv, bytrap_csv, outdir):
                 f"</div>"
             )
             
-            folium.CircleMarker(
+            marker = folium.CircleMarker(
                 [r["lat"], r["lon"]],
                 radius=6,
                 color=c, fill=True, fill_color=c, fill_opacity=0.85,
                 weight=1,
-                popup=folium.Popup(popup_html, max_width=300),
-                tooltip=f"Trap {r['trap_num']}: {val_clipped:.1f} – {itch_band(val):s}" if val_clipped is not None else f"Trap {r['trap_num']}: No data"
-            ).add_to(traps_fg)
-        traps_fg.add_to(m)
+                popup=folium.Popup(popup_html, max_width=320),
+                tooltip=(f"Trap {r['trap_num']}: {val_clipped:.1f} – {itch_band(val):s}" if val_clipped is not None else f"Trap {r['trap_num']}: No data"
+                ),
+            )
+            marker.add_to(traps_fg)
 
+        # -- Register marker/species for client-side filtering
+            _species_for_js = ",".join(_split_species_list(str(r.get("species","")))).lower()
+            m.get_root().html.add_child(
+                folium.Element(
+                    f"<script>window.itchRegisterTrap({marker.get_name()}, {json.dumps(_species_for_js)});</script>"
+                )
+            )
+
+        traps_fg.add_to(m)
+        
         # -- Parks layer (solid color + black outline), with popups showing park name, mean, n, and contributing trap numbers
         parks_fg = folium.FeatureGroup(name="Parks (nearest-5 avg)", show=False)
         parks_geo = os.path.join("data", "parks_itch_index.geojson")
