@@ -384,6 +384,43 @@ def main(latest_csv, bytrap_csv, outdir):
         mcenter = [latest["lat"].mean(), latest["lon"].mean()]
         m = folium.Map(location=mcenter, zoom_start=11, tiles="cartodbpositron")
 
+        # inject small JS to enable species-based highlighting
+        _filter_js = """
+        <script>
+        window.itchFilterActive = null;
+        window.itchAllTrapLayers = [];
+
+        window.itchRegisterTrap = function(layer, speciesText) {
+          try {
+            layer._itchSpecies = (speciesText || '').toLowerCase();
+            window.itchAllTrapLayers.push(layer);
+          } catch (e) {}
+        };
+
+        window.itchFilterSpecies = function(species) {
+          const key = String(species || '').toLowerCase().trim();
+          if (!key) return;
+          // toggle off if same chip clicked
+          if (window.itchFilterActive === key) {
+            window.itchFilterActive = null;
+            window.itchAllTrapLayers.forEach(l => {
+              try { l.setStyle({opacity:1, fillOpacity:0.85}); } catch(e) {}
+            });
+            return;
+          }
+          window.itchFilterActive = key;
+          window.itchAllTrapLayers.forEach(l => {
+            const hit = (l._itchSpecies || '').includes(key);
+            try {
+              l.setStyle({opacity: hit ? 1 : 0.15, fillOpacity: hit ? 0.85 : 0.06});
+              if (hit && l.bringToFront) l.bringToFront();
+            } catch(e) {}
+          });
+        };
+        </script>
+        """
+        m.get_root().html.add_child(folium.Element(_filter_js))
+        
         # -- Traps layer (points)
         traps_fg = folium.FeatureGroup(name="Traps (points)", show=True)
         for _, r in latest.iterrows():
@@ -498,7 +535,3 @@ if __name__ == "__main__":
     ap.add_argument("--outdir", default="outputs_story", help="where to save visuals")
     args = ap.parse_args()
     main(args.latest, args.bytrap, args.outdir)
-
-
-#--------------------------
-#
