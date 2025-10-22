@@ -40,10 +40,15 @@ def band_edges(): return [0,2,5,7,9,10]
 def band_labels(): return ["Low","Moderate","High","Very High","Extreme"]
 
 def _band_short(v: float) -> str:
-    """Get just 'Low'/'Moderate'/...(derived from itch_band)."""
-    b = itch_band(v)
-    # take first token ('Low', 'Moderate', etc.); handle 'No data'
-    return b.split()[0] if b and b != "No data" else "No data"
+    """Return just 'Low'/'Moderate'/'High'/'Very High'/'Extreme' (or 'No data')."""
+    if v is None or pd.isna(v):
+        return "No data"
+    v = float(np.clip(v, 0, 10))
+    if v < 2:  return "Low"
+    if v < 5:  return "Moderate"
+    if v < 7:  return "High"
+    if v < 9:  return "Very High"
+    return "Extreme"
 
 def recs_for_band(band: str) -> list[str]:
     band = (band or "").strip()
