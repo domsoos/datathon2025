@@ -420,21 +420,34 @@ def main(latest_csv, bytrap_csv, outdir):
         </script>
         """
         m.get_root().html.add_child(folium.Element(_filter_js))
-        
+
         # -- Traps layer (points)
         traps_fg = folium.FeatureGroup(name="Traps (points)", show=True)
         for _, r in latest.iterrows():
             val = r["itch_index"]
             val_clipped = float(np.clip(val, 0, 10)) if not pd.isna(val) else None
             c = band_color(val_clipped)
+
+            # popup with species chips + precautions
+            band_lbl = _band_short(val_clipped)
+            species_html = render_species_chips(r.get("species","") or "")
+            date_str = ""
+            if isinstance(r.get("date", None), pd.Timestamp):
+                date_str = r["date"].strftime("%Y-%m-%d")
+            elif isinstance(r.get("date", None), str):
+                date_str = r["date"]
             popup_html = (
-                f"<b>Trap {r['trap_num']}</b><br>"
-                f"<b>Itch:</b> {val_clipped:.1f} ({itch_band(val):s})<br>"
-                f"<b>Address:</b> {r.get('address','') or '—'}<br>"
-                f"<b>Species:</b> {r.get('species','') or '—'}<br>"
-                f"<b>Date:</b> {r.get('date','') or '—'}<br>"
-                f"<b>Count:</b> {r.get('count','') or '—'}"
+                f"<div style='min-width:260px'>"
+                f"<div style='font-weight:700;margin-bottom:4px;'>Trap {r['trap_num']}</div>"
+                f"<div><b>Itch:</b> {val_clipped:.1f} ({itch_band(val)})</div>"
+                f"<div><b>Address:</b> {html.escape(str(r.get('address','') or '—'))}</div>"
+                f"<div><b>Species:</b> {species_html}</div>"
+                f"<div><b>Date:</b> {html.escape(date_str or '—')}</div>"
+                f"<div><b>Count:</b> {html.escape(str(r.get('count','') or '—'))}</div>"
+                f"<div style='margin-top:6px;'><b>Recommended precautions ({band_lbl}):</b>{render_recs_html(band_lbl)}</div>"
+                f"</div>"
             )
+            
             folium.CircleMarker(
                 [r["lat"], r["lon"]],
                 radius=6,
