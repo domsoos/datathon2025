@@ -16,13 +16,19 @@ Outputs (PNG/HTML) go to --outdir:
   - itch_map_banded.html
 """
 
-import argparse, os
+import argparse
+import os
+import json
+import html
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 def itch_band(v: float) -> str:
+    if pd.isna(v):
+        return "No data"
+    v = float(v)
     if v < 2:  return "Low (0–2)"
     if v < 5:  return "Moderate (3–4)"
     if v < 7:  return "High (5–6)"
@@ -31,6 +37,40 @@ def itch_band(v: float) -> str:
 
 def band_edges(): return [0,2,5,7,9,10]
 def band_labels(): return ["Low","Moderate","High","Very High","Extreme"]
+
+def _band_short(v: float) -> str:
+    """Return just 'Low'/'Moderate'/'High'/'Very High'/'Extreme' (or 'No data')."""
+    if v is None or pd.isna(v):
+        return "No data"
+    v = float(np.clip(v, 0, 10))
+    if v < 2:  return "Low"
+    if v < 5:  return "Moderate"
+    if v < 7:  return "High"
+    if v < 9:  return "Very High"
+    return "Extreme"
+
+def recs_for_band(band: str) -> list[str]:
+    band = (band or "").strip()
+    if band == "Low":
+        return ["Use repellent if outdoors at dusk/dawn."]
+    if band == "Moderate":
+        return ["Apply EPA-registered repellent.", "Wear long sleeves/pants at dusk/dawn."]
+    if band == "High":
+        return ["Use repellent (reapply as directed).", "Limit time outdoors at peak hours.",
+                "Run fans outside."]
+    if band == "Very High":
+        return ["Strongly use repellent & cover up.", "Avoid dusk/dawn gatherings if possible.",
+                "Avoid standing water.", "Consider spatial repellents."]
+    if band == "Extreme":
+        return ["Avoid peak biting hours if possible.", "Repellent + protective clothing every outing.",
+                "Steer clear of all standing water.", "Use fans; stay near screened areas."]
+    return ["No specific guidance."]
+
+def render_recs_html(band_label: str) -> str:
+    items = recs_for_band(band_label)
+    lis = "".join(f"<li>{html.escape(x)}</li>" for x in items)
+    return f"<ul style='margin:4px 0 0 16px;padding-left:14px;'>{lis}</ul>"
+
 
 def safe_read(p):
     if not os.path.exists(p):
@@ -46,6 +86,10 @@ def main(latest_csv, bytrap_csv, outdir):
     for df in (latest, bytrap):
         if "date" in df.columns:
             df["date"] = pd.to_datetime(df["date"], errors="coerce")
+
+    # --- Number traps 1..k (so park popups can reference trap numbers)
+    latest = latest.copy()
+    latest["trap_num"] = range(1, len(latest) + 1)
 
     # 1) Distribution (latest only)
     v = latest["itch_index"].dropna().clip(0,10).values
@@ -181,19 +225,135 @@ def main(latest_csv, bytrap_csv, outdir):
         plt.figure(figsize=(7,5))
         data = [g["itch_index"].clip(0,10).values for _, g in latest_by_site.groupby("trap_type")]
         labels = [str(k) for k, _ in latest_by_site.groupby("trap_type")]
-        plt.boxplot(data, labels=labels, vert=True, showfliers=False)
+        plt.boxplot(data, tick_labels=labels, vert=True, showfliers=False)
         plt.ylabel("Itch Index (0–10)")
         plt.title("Itch Index by trap type (latest per site)")
         plt.tight_layout()
         plt.savefig(os.path.join(outdir,"fig_traptype_box.png"), dpi=150)
         plt.close()
 
-    # 6) Interactive map with banded colors (discrete)
+    # ------------------------------
+    # Park-level Itch Index overlay
+    # ------------------------------
+    try:
+        import geopandas as gpd
+        from shapely.geometry import Point
+
+        print("Calculating park-level Itch Index (nearest-5 traps)...")
+
+        # load parks (Norfolk)
+        parks_path = os.path.join("data", "Parks_-_City_of_Norfolk.geojson")
+        parks = gpd.read_file(parks_path)
+        # ensure we operate in metric units for distance calculations
+        parks = parks.to_crs(epsg=3857)
+
+        # prepare trap GeoDataFrame (latest trap points)
+        traps = latest.dropna(subset=["lat", "lon", "itch_index"]).copy()
+        # ensure trap_num exists in traps (we created it earlier)
+        if "trap_num" not in traps.columns:
+            traps["trap_num"] = range(1, len(traps) + 1)
+        traps_gdf = gpd.GeoDataFrame(
+            traps,
+            geometry=gpd.points_from_xy(traps["lon"], traps["lat"]),
+            crs="EPSG:4326"
+        )
+        traps_gdf = traps_gdf.to_crs(epsg=3857)
+
+        # park centroids in meters
+        park_centroids = parks.geometry.centroid
+        park_coords = np.vstack([[pt.x, pt.y] for pt in park_centroids])
+
+        # trap coords in meters
+        trap_coords = np.vstack([[pt.x, pt.y] for pt in traps_gdf.geometry])
+        trap_vals = traps_gdf["itch_index"].values
+        # trap_nums aligned to trap_coords indices
+        trap_nums_arr = traps_gdf["trap_num"].astype(str).values
+        trap_addresses = traps_gdf["address"].fillna("").values
+
+        # nearest-k weighted average by inverse-distance (power)
+        k = 5
+        power = 2   # exponent: 1.0 -> 1/d, 2.0 -> 1/d^2 (stronger locality)
+        eps = 1e-3    # meters; avoids div-by-zero for coincident points
+
+        park_itch_means = []
+        park_itch_n = []
+        park_trap_lists = []
+
+        # Precompute trap arrays
+        if len(trap_coords) == 0:
+            # no traps at all: fill with NaNs / zeros
+            for _ in range(len(park_coords)):
+                park_itch_means.append(np.nan)
+                park_itch_n.append(0)
+                park_trap_lists.append([])
+        else:
+            for pc in park_coords:
+                # squared Euclidean distances (in projected meters)
+                d2 = np.sum((trap_coords - pc) ** 2, axis=1)
+                d = np.sqrt(d2)
+
+                # indices of nearest k traps (or fewer if not enough)
+                idx = np.argsort(d)[:k]
+                sel_vals = trap_vals[idx]            # itch_index values (may contain NaN)
+                sel_nums = trap_nums_arr[idx]       # trap numbers as strings
+                sel_addrs = [str(trap_addresses[i]) for i in idx]
+                sel_d = d[idx]
+
+                # handle case where all selected values are NaN
+                valid_mask = ~np.isnan(sel_vals)
+                n_valid = int(np.sum(valid_mask))
+                park_itch_n.append(n_valid)
+
+                if n_valid == 0:
+                    park_itch_means.append(np.nan)
+                    park_trap_lists.append([])
+                    continue
+
+                # compute inverse-distance weights; use eps to prevent inf for zero distance
+                # w_i = 1 / (d_i + eps)**power
+                w = 1.0 / (np.maximum(sel_d, 0.0) + eps) ** power
+                # zero out weights where value is NaN, then renormalize
+                w = w * valid_mask.astype(float)
+                w_sum = w.sum()
+                if w_sum <= 0:
+                    # fallback to simple (unweighted) mean of valid values
+                    mean_val = float(np.nanmean(sel_vals))
+                else:
+                    w = w / w_sum
+                    mean_val = float(np.nansum(w * sel_vals))
+
+                park_itch_means.append(mean_val)
+                # store numbers of contributing traps (only those with valid values)
+                contrib_nums = [sel_nums[i] for i in range(len(idx)) if valid_mask[i]]
+                park_trap_lists.append(contrib_nums)
+
+        parks["itch_mean"] = park_itch_means
+        parks["itch_n"] = park_itch_n
+        # store contributing trap numbers as a comma-separated string for each park
+        parks["itch_trap_ids"] = [",".join(l) if l else "" for l in park_trap_lists]
+
+        # save parks with new properties back to GeoJSON (in WGS84)
+        parks_out = os.path.join("data", "parks_itch_index.geojson")
+        parks.to_crs(epsg=4326).to_file(parks_out, driver="GeoJSON")
+        print(f"Saved park-level scores to {parks_out}")
+
+    except Exception as e:
+        print("Park overlay skipped (geopandas required):", e)
+
+    # ------------------------------
+    # Create the folium map with 3 toggleable layers:
+    #  - Traps (circle markers)
+    #  - Parks (solid fills, black outline) with popups listing trap numbers
+    #  - IDW grid (gradient as many small circles)
+    # ------------------------------
     try:
         import folium
         from folium import features
 
         def band_color(v):
+            if v is None or pd.isna(v):
+                return "#CCCCCC"
+            v = float(np.clip(v, 0, 10))
             if v < 2:  return "#6BBE45"  # Low
             if v < 5:  return "#FFD23F"  # Moderate
             if v < 7:  return "#FF9F1C"  # High
@@ -202,27 +362,110 @@ def main(latest_csv, bytrap_csv, outdir):
 
         mcenter = [latest["lat"].mean(), latest["lon"].mean()]
         m = folium.Map(location=mcenter, zoom_start=11, tiles="cartodbpositron")
-        g = folium.FeatureGroup(name="Itch (latest)", show=True)
 
+
+        # -- Traps layer (points)
+        traps_fg = folium.FeatureGroup(name="Traps (points)", show=True)
         for _, r in latest.iterrows():
-            val = float(np.clip(r["itch_index"], 0, 10))
-            c = band_color(val)
-            popup = folium.Popup(f"<b>Itch:</b> {val:.1f} ({itch_band(val)})<br>"
-                                 f"<b>Address:</b> {r.get('address','') or '—'}<br>"
-                                 f"<b>Species:</b> {r.get('species','') or '—'}<br>"
-                                 f"<b>Date:</b> {r.get('date','') or '—'}<br>"
-                                 f"<b>Count:</b> {r.get('count','') or '—'}", max_width=260)
-            folium.CircleMarker(
+            val = r["itch_index"]
+            val_clipped = float(np.clip(val, 0, 10)) if not pd.isna(val) else None
+            val_str = f"{val_clipped:.1f}" if val_clipped is not None else "--"
+            c = band_color(val_clipped)
+
+            # popup with precautions
+            band_lbl = _band_short(val_clipped)
+            species_html = html.escape(r.get("species", "") or "--")
+            date_str = ""
+            if isinstance(r.get("date", None), pd.Timestamp):
+                date_str = r["date"].strftime("%Y-%m-%d")
+            elif isinstance(r.get("date", None), str):
+                date_str = r["date"]
+            popup_html = (
+                f"<div style='min-width:260px'>"
+                f"<div style='font-weight:700;margin-bottom:4px;'>Trap {r['trap_num']}</div>"
+                f"<div><b>Itch:</b> {val_str} ({itch_band(val)})</div>"
+                f"<div><b>Address:</b> {html.escape(str(r.get('address','') or '—'))}</div>"
+                f"<div><b>Species:</b> {species_html}</div>"
+                f"<div><b>Date:</b> {html.escape(date_str or '—')}</div>"
+                f"<div><b>Count:</b> {html.escape(str(r.get('count','') or '—'))}</div>"
+                f"<div style='margin-top:6px;'><b>Recommended precautions ({band_lbl}):</b>{render_recs_html(band_lbl)}</div>"
+                f"</div>"
+            )
+            
+            marker = folium.CircleMarker(
                 [r["lat"], r["lon"]],
                 radius=6,
                 color=c, fill=True, fill_color=c, fill_opacity=0.85,
-                weight=1, popup=popup,
-                tooltip=f"{val:.1f} – {itch_band(val)}"
-            ).add_to(g)
-        g.add_to(m)
+                weight=1,
+                popup=folium.Popup(popup_html, max_width=320),
+                tooltip=(f"Trap {r['trap_num']}: {val_clipped:.1f} – {itch_band(val):s}" if val_clipped is not None else f"Trap {r['trap_num']}: No data"
+                ),
+            )
+            marker.add_to(traps_fg)
+
+
+        traps_fg.add_to(m)
+
+        # -- Parks layer (solid color + black outline), with popups showing park name, mean, n, and contributing trap numbers
+        parks_fg = folium.FeatureGroup(name="Parks (nearest-5 avg)", show=False)
+        parks_geo = os.path.join("data", "parks_itch_index.geojson")
+        if os.path.exists(parks_geo):
+            with open(parks_geo, "r", encoding="utf-8") as f:
+                parks_data = json.load(f)
+
+            def park_style(feature):
+                props = feature.get("properties", {})
+                v = props.get("itch_mean", None)
+                # color fill by band, outline in black
+                fill = band_color(v)
+                return {"color": "#000000", "weight": 1.25, "fillColor": fill, "fillOpacity": 0.75}
+
+            # create popup_html property on each feature (so GeoJsonPopup can use it)
+            for feat in parks_data.get("features", []):
+                p = feat.get("properties", {})
+                name = p.get("PARK_NAME", "—")
+                mean = p.get("itch_mean", None)
+                mean_str = f"{mean:.2f}" if (mean is not None and not pd.isna(mean)) else "—"
+                n = p.get("itch_n", 0)
+                traplist = p.get("itch_trap_ids", "")
+                # show a friendly placeholder if empty
+                traplist_display = traplist if traplist else "—"
+
+                # precautions in park popup
+                band_lbl = _band_short(mean)
+                recs_html = render_recs_html(band_lbl)
+
+                popup_html_block = (
+                    f"<div style='min-width:260px'>"
+                    f"<div style='font-weight:700;margin-bottom:4px;'>{html.escape(str(name))}</div>"
+                    f"<div><b>Itch index:</b> {html.escape(mean_str)} ({band_lbl})</div>"
+                    f"<div><b># Contributing traps:</b> {html.escape(str(n))}</div>"
+                    f"<div><b>Contributing traps:</b> {html.escape(traplist_display)}</div>"
+                    f"<div style='margin-top:6px;'><b>Recommended precautions ({band_lbl}):</b>{recs_html}</div>"
+                    f"</div>"
+                )
+                p["popup_html"] = popup_html_block
+
+            folium.GeoJson(
+                parks_data,
+                name="Parks (nearest-5 avg)",
+                style_function=park_style,
+                tooltip=folium.GeoJsonTooltip(
+                    fields=["PARK_NAME","itch_mean","itch_n"],
+                    aliases=["Park:","Mean Itch:","# Contributing traps:"],
+                    localize=True,
+                    labels=True,
+                    sticky=False
+                ),
+                popup=folium.GeoJsonPopup(fields=["popup_html"], labels=False, parse_html=True)
+            ).add_to(parks_fg)
+        else:
+            print(f"No park GeoJSON found at {parks_geo}")
+        parks_fg.add_to(m)
+
+        # Add controls + legend
         folium.LayerControl(collapsed=False).add_to(m)
 
-        # Legend
         legend = """
         <div style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: white; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px;">
           <div style="font-weight:600; margin-bottom:6px;">Itch Index (0–10)</div>
@@ -234,9 +477,11 @@ def main(latest_csv, bytrap_csv, outdir):
         </div>
         """
         m.get_root().html.add_child(folium.Element(legend))
+
         out_html = os.path.join(outdir, "itch_map_banded.html")
         m.save(out_html)
         print(f"Saved {out_html}")
+
     except Exception as e:
         print("Map skipped (install folium to enable):", e)
 
@@ -258,4 +503,3 @@ if __name__ == "__main__":
     ap.add_argument("--outdir", default="outputs_story", help="where to save visuals")
     args = ap.parse_args()
     main(args.latest, args.bytrap, args.outdir)
-
