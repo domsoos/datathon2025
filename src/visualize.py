@@ -77,7 +77,7 @@ def safe_read(p):
         raise SystemExit(f"Missing file: {p}")
     return pd.read_csv(p)
 
-def main(latest_csv, bytrap_csv, outdir):
+def main(latest_csv, bytrap_csv, outdir, data_dir):
     os.makedirs(outdir, exist_ok=True)
     latest = safe_read(latest_csv)
     bytrap = safe_read(bytrap_csv)
@@ -242,7 +242,7 @@ def main(latest_csv, bytrap_csv, outdir):
         print("Calculating park-level Itch Index (nearest-5 traps)...")
 
         # load parks (Norfolk)
-        parks_path = os.path.join("data", "Parks_-_City_of_Norfolk.geojson")
+        parks_path = os.path.join(data_dir, "Parks_-_City_of_Norfolk.geojson")
         parks = gpd.read_file(parks_path)
         # ensure we operate in metric units for distance calculations
         parks = parks.to_crs(epsg=3857)
@@ -333,7 +333,7 @@ def main(latest_csv, bytrap_csv, outdir):
         parks["itch_trap_ids"] = [",".join(l) if l else "" for l in park_trap_lists]
 
         # save parks with new properties back to GeoJSON (in WGS84)
-        parks_out = os.path.join("data", "parks_itch_index.geojson")
+        parks_out = os.path.join(data_dir, "parks_itch_index.geojson")
         parks.to_crs(epsg=4326).to_file(parks_out, driver="GeoJSON")
         print(f"Saved park-level scores to {parks_out}")
 
@@ -408,7 +408,7 @@ def main(latest_csv, bytrap_csv, outdir):
 
         # -- Parks layer (solid color + black outline), with popups showing park name, mean, n, and contributing trap numbers
         parks_fg = folium.FeatureGroup(name="Parks (nearest-5 avg)", show=False)
-        parks_geo = os.path.join("data", "parks_itch_index.geojson")
+        parks_geo = os.path.join(data_dir, "parks_itch_index.geojson")
         if os.path.exists(parks_geo):
             with open(parks_geo, "r", encoding="utf-8") as f:
                 parks_data = json.load(f)
@@ -501,5 +501,6 @@ if __name__ == "__main__":
     ap.add_argument("--latest", required=True, help="path to itch_index_latest_by_location.csv")
     ap.add_argument("--bytrap", required=True, help="path to itch_index_by_trap.csv")
     ap.add_argument("--outdir", default="outputs_story", help="where to save visuals")
+    ap.add_argument("--data-dir", default="data", help="directory containing parks GeoJSON")
     args = ap.parse_args()
-    main(args.latest, args.bytrap, args.outdir)
+    main(args.latest, args.bytrap, args.outdir, args.data_dir)
