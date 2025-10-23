@@ -10,11 +10,12 @@ A UV-style index that translates mosquito surveillance into a simple number peop
 /data
   Hampton_Roads_NWI_Wetlands.csv
   Mosquito_Trap_Counts_YYYYMMDD.csv
+  park_itch_index.geojson
+  Parks_-_City_of_Norfolk.geojson
 /src
-  itch_index.py          # builds the index + exports CSV/PNGs/heatgrid
-  make_itch_story.py     # builds narrative visuals + banded folium map
+  calculate_itch_index.py          # builds the index + exports CSV/PNGs/heatgrid
+  visualize.py     # builds narrative visuals + banded folium map
 /outputs
-/outputs_story
 ```
 ## Installation
 ```bash
@@ -55,7 +56,7 @@ Per trap reading, we compute a biologically plausible **base risk** and then map
 
 ## Run the pipeline
 ```bash
-python3 src/itch_index.py \
+python3 src/calculate_itch_index.py \
   --traps data/Mosquito_Trap_Counts_20251017.csv \
   --wetlands data/Hampton_Roads_NWI_Wetlands.csv \
   --outdir outputs
@@ -72,10 +73,11 @@ python3 src/itch_index.py \
 
 ## Build the visuals
 ```bash
-python3 src/make_itch_story.py \
+python3 src/visualize.py \
   --latest outputs/itch_index_latest_by_location.csv \
   --bytrap outputs/itch_index_by_trap.csv \
-  --outdir outputs_story
+  --outdir outputs_story \
+  --data-dir data
 ```
 
 ## Story outputs
