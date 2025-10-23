@@ -225,7 +225,7 @@ def main(latest_csv, bytrap_csv, outdir):
         plt.figure(figsize=(7,5))
         data = [g["itch_index"].clip(0,10).values for _, g in latest_by_site.groupby("trap_type")]
         labels = [str(k) for k, _ in latest_by_site.groupby("trap_type")]
-        plt.boxplot(data, tick_labels=labels, vert=True, showfliers=False)
+        plt.boxplot(data, labels=labels, vert=True, showfliers=False)
         plt.ylabel("Itch Index (0–10)")
         plt.title("Itch Index by trap type (latest per site)")
         plt.tight_layout()
