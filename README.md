@@ -2,7 +2,7 @@
 
 A UV-style index that translates mosquito surveillance into a simple number people can use to choose protection for parks and green spaces.
 
-<p align="center"> <a href="https://domsoos.github.io/itch_map.html"> <img src="data/itchmap.png" alt="Open the live Itch Map" width="760"> </a><br> <em>Click the image to open the interactive Itch Map</em> </p> <p align="center"> <a href="https://domsoos.github.io/itch_map.html"> <img alt="Open Itch Map (GitHub Pages)" src="https://img.shields.io/badge/Open%20Itch%20Map-LIVE-2ea44f"> </a> </p>
+<p align="center"> <a href="https://domsoos.github.io/datathon2025/itch_map.html"> <img src="data/itchmap.png" alt="Open the live Itch Map" width="760"> </a><br> <em>Click the image to open the interactive Itch Map</em> </p> <p align="center"> <a href="https://domsoos.github.io/datathon2025/itch_map.html"> <img alt="Open Itch Map (GitHub Pages)" src="https://img.shields.io/badge/Open%20Itch%20Map-LIVE-2ea44f"> </a> </p>
 
 
 ## Repo structure
